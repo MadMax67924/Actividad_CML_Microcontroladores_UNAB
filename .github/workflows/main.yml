@@ -3,7 +3,7 @@ name: CI for ML Project
 on:
   push:
     branches:
-      - main  # Ejecuta el workflow cuando hay push en la rama main
+      - main
 
 jobs:
   build:
@@ -26,6 +26,9 @@ jobs:
       - name: Run training
         run: python train.py
 
+      - name: Run prediction
+        run: python predict.py
+
       - name: Upload model
         uses: actions/upload-artifact@v4
         with:
@@ -37,3 +40,9 @@ jobs:
         with:
           name: feature-importance
           path: feature_importance.png
+
+      - name: Upload predictions
+        uses: actions/upload-artifact@v4
+        with:
+          name: predictions
+          path: predictions.csv
