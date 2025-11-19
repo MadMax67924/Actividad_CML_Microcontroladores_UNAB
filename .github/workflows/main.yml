@@ -7,14 +7,22 @@ on:
 
 jobs:
   train:
-    runs-on: self-hosted  # Usa el runner local que configuraste
+    runs-on: self-hosted
 
     steps:
-      - name: Run training
-        run: python train.py
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          python3.8 -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Train Model
+        run: python3.8 train.py
 
       - name: Run Prediction
-        run: python predict.py
+        run: python3.8 predict.py
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
