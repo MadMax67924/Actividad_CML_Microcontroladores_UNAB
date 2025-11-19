@@ -1,4 +1,4 @@
-name: CI for ML Project
+name: Train Model On-Premise
 
 on:
   push:
@@ -6,30 +6,34 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  train:
+    runs-on: self-hosted  # Usa el runner local que configuraste
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Run training
         run: python train.py
 
-      - name: Run prediction
+      - name: Run Prediction
         run: python predict.py
 
-      - name: Upload model
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: trained-model
-          path: model.pkl
-
-      - name: Upload feature importance plot
-        uses: actions/upload-artifact@v4
-        with:
-          name: feature-importance
-          path: feature_importance.png
-
-      - name: Upload predictions
-        uses: actions/upload-artifact@v4
-        with:
-          name: predictions
-          path: predictions.csv
+          name: results
+          path: |
+            model.pkl
+            feature_importance.png
+            predictions.csv
